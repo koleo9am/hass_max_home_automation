@@ -17,6 +17,13 @@ Hence this implementation is probably not following HA best practices.
 
 As almost everyone I am developing this in my free time, so be kind in case I have delays in communication/enhancements.
 
+## Deployment
+I have Home Assistant and MAX! Home Automation installed on the same Raspberry PI Model 3B+.
+MAX! Home Automation has enabled HTTP API only for localhost at 8080 port.
+
+## Useful links
+How to install MAX! Home Automation on Raspberry PI: https://sourceforge.net/p/max-home-automation/wiki/Raspberry%20installation/
+
 ## Feature list
 * Climate Component
   * all Operational modes: AUTO, MANUAL, BOOST, VACATION
