@@ -34,9 +34,12 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         # walk through devices
         for device in handler._cube_json[MHA_API_DEVICES]:
             #we have thermostat
-            if device[MHA_API_TYPE] == MHA_API_RADIATOR_THERMOSTAT:
-                device_address = device[MHA_API_ADDRESS]
-                device_name = device[MHA_API_NAME]
+            if device.get(MHA_API_TYPE, '') == MHA_API_RADIATOR_THERMOSTAT:
+                device_address = device.get(MHA_API_ADDRESS, None)
+                device_name = device.get(MHA_API_NAME, None)
+                
+                if device_address is None:
+                    continue
                 
                 devices.append(
                     MaxHomeAutomationClimate (handler, device_name, device_address))
@@ -88,15 +91,21 @@ class MaxHomeAutomationClimate(ClimateDevice):
     def current_temperature(self):
         """Return the current temperature."""
         device = self._cubehandle.device_by_address(self._device_address)
-
-        # Map and return current temperature
-        return MaxHomeAutomationHandler.map_temperature_mha_to_hass(device[MHA_API_TEMPERATURE])
+        # device not found
+        if device is None:
+            return None
+        # return the converted value
+        return device.get(MHA_API_TEMPERATURE, None)
 
     @property
     def current_operation(self):
         """Return current operation (auto, manual, boost, vacation)."""
         device = self._cubehandle.device_by_address(self._device_address)
-        return MAP_MHA_OPERATION_MODE_HASS[device[MHA_API_MODE]]
+        # device not found
+        if device is None:
+            return None
+        # return the converted value
+        return MAP_MHA_OPERATION_MODE_HASS.get(device.get(MHA_API_MODE, None), None)
 
     @property
     def operation_list(self):
@@ -107,7 +116,11 @@ class MaxHomeAutomationClimate(ClimateDevice):
     def target_temperature(self):
         """Return the temperature we try to reach."""
         device = self._cubehandle.device_by_address(self._device_address)
-        return MaxHomeAutomationHandler.map_temperature_mha_to_hass(device[MHA_API_SET_TEMPERATURE])
+        # device not found
+        if device is None:
+            return None
+        # return the converted value
+        return device.get(MHA_API_SET_TEMPERATURE, None)
 
     def set_temperature(self, **kwargs):
         """Set new target temperatures."""

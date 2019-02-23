@@ -149,12 +149,16 @@ class MaxHomeAutomationHandler:
         cube_data_url = self._gateway_base_url + "get-status-json?cube={}".format(self._cube_hex_address)
         self._cube_data_request = requests.Request(DEFAULT_METHOD, cube_data_url).prepare()
         
+        # MAX! Home Automation MAX! Cube Duty URL
+        cube_duty_url = self._gateway_base_url + "get-duty?cube={}".format(self._cube_hex_address)
+        self._cube_duty_request = requests.Request(DEFAULT_METHOD, cube_duty_url).prepare()
+        
         # JSON data initial value
         self._cube_json = None
         
         # thread synchronization stuff
         self._mutex = Lock()
-        # initialy not actual 
+        # initially not actual 
         self._updatets = time.time() - self._scan_interval;
 
     def update(self):
@@ -165,33 +169,48 @@ class MaxHomeAutomationHandler:
             if (time.time() - self._updatets) >= self._scan_interval:
                 _LOGGER.debug("Updating")
 
+                self._updatets = time.time()
+
+                # fetch JSON data
                 try:
                     with requests.Session() as sess:
-                        # callout
+                        # call-out
                         response = sess.send(self._cube_data_request, timeout=10)
                         # process data
                         data = response.text
                         self._cube_json = json.loads(data)
                         
-                except requests.exceptions.RequestException as ex:
-                    _LOGGER.error("Error fetching data: %s from %s failed with %s",
-                        self._request, self._request.url, ex)
+                except Exception as ex:
+                    _LOGGER.error("Max! Home Automation connection failed - JSON data: {}".format (ex))
                     self._cube_json = None
                     return False
-                except timeout:
-                    _LOGGER.error("Max! Home Automation connection failed")
-                    self._cube_json = None
+                
+                # fetch Duty data
+                try:
+                    with requests.Session() as sess:
+                        # call-out
+                        response = sess.send(self._cube_duty_request, timeout=10)
+                        # process data
+                        self._cube_duty = response.text
+                        
+                except Exception as ex:
+                    _LOGGER.error("Max! Home Automation connection failed - duty data: {}".format (ex))
+                    self._cube_duty = None
                     return False
 
-                self._updatets = time.time()
             else:
                 _LOGGER.debug("Skipping update")
                 
     def device_by_address(self, device_address):
         """Find device from MAX! Home Automation data"""
-        for device in self._cube_json[MHA_API_DEVICES]:
-            if device_address == device[MHA_API_ADDRESS]:
+        # no data
+        if self._cube_json is None:
+            return None
+        # find device in JSON
+        for device in self._cube_json.get(MHA_API_DEVICES, []):
+            if device_address == device.get(MHA_API_ADDRESS, 0):
                 return device
+        # device not found
         return None
     
     @staticmethod
