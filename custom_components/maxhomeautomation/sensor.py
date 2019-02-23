@@ -105,6 +105,11 @@ class MaxHomeAutomationSensor(Entity):
         self.update()
 
     @property
+    def should_poll(self):
+        """Return the polling state."""
+        return True
+    
+    @property
     def state(self):
         """Return the state of the sensor."""
         return self._state
@@ -158,7 +163,12 @@ class MaxHomeAutomationDutySensor(Entity):
         self._state = None
         # read current value
         self.update()
-
+    
+    @property
+    def should_poll(self):
+        """Return the polling state."""
+        return True
+    
     @property
     def state(self):
         """Return the state of the sensor."""
