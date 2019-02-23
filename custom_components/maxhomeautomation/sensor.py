@@ -5,7 +5,8 @@ from homeassistant.const import TEMP_CELSIUS
 from .__init__ import (
     DATA_KEY, MHA_API_DEVICES, MHA_API_ADDRESS, MHA_API_NAME, 
     MHA_API_RADIATOR_THERMOSTAT, MHA_API_TYPE, MHA_API_TEMPERATURE,
-    MHA_API_SET_TEMPERATURE, MHA_API_VALVE, MHA_API_OFFSET
+    MHA_API_SET_TEMPERATURE, MHA_API_VALVE, MHA_API_OFFSET,
+    MHA_API_ECO_BUTTON, MHA_API_MODE, MAP_MHA_OPERATION_MODE_HASS
     )
 
 _LOGGER = logging.getLogger(__name__)
@@ -15,6 +16,7 @@ MHA_SENSOR_TYPE_TEMPERATURE = MHA_API_TEMPERATURE
 MHA_SENSOR_TYPE_SET_TEMPERATURE = MHA_API_SET_TEMPERATURE
 MHA_SENSOR_TYPE_VALVE = MHA_API_VALVE
 MHA_SENSOR_TYPE_OFFSET = MHA_API_OFFSET
+MHA_SENSOR_TYPE_ECO_BUTTON = MHA_API_MODE
 
 # allowed sensors types
 MHA_ALLOWED_SENSOR_TYPES = [
@@ -22,6 +24,7 @@ MHA_ALLOWED_SENSOR_TYPES = [
     MHA_SENSOR_TYPE_SET_TEMPERATURE, 
     MHA_SENSOR_TYPE_VALVE, 
     MHA_SENSOR_TYPE_OFFSET,
+    MHA_SENSOR_TYPE_ECO_BUTTON,
     ]
 
 # map sensor type to unit
@@ -30,6 +33,7 @@ MHA_UNIT_HA_CAST = {
     MHA_SENSOR_TYPE_SET_TEMPERATURE: TEMP_CELSIUS,
     MHA_SENSOR_TYPE_VALVE: '%',
     MHA_SENSOR_TYPE_OFFSET: TEMP_CELSIUS,
+    MHA_SENSOR_TYPE_ECO_BUTTON: ''
 }
 
 # map sensor type to icon
@@ -37,7 +41,8 @@ MHA_ICON_HA_CAST = {
     MHA_SENSOR_TYPE_TEMPERATURE: 'mdi:thermometer',
     MHA_SENSOR_TYPE_SET_TEMPERATURE: 'mdi:thermometer',
     MHA_SENSOR_TYPE_VALVE: 'mdi:radiator',
-    MHA_SENSOR_TYPE_OFFSET: 'mdi:delta'
+    MHA_SENSOR_TYPE_OFFSET: 'mdi:delta',
+    MHA_SENSOR_TYPE_ECO_BUTTON: 'mdi:home-automation',
 }
 
 
@@ -51,11 +56,11 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         handler.update()
         # walk through devices
         for device in handler._cube_json[MHA_API_DEVICES]:
+
             #we have thermostat
             if device[MHA_API_TYPE] == MHA_API_RADIATOR_THERMOSTAT:
                 device_address = device[MHA_API_ADDRESS]
                 device_name = device[MHA_API_NAME]
-                
                 devices.append(
                     MaxHomeAutomationSensor (handler, device_name + " - Temperature", device_address, MHA_SENSOR_TYPE_TEMPERATURE))
                 devices.append(
@@ -64,6 +69,12 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
                     MaxHomeAutomationSensor (handler, device_name + " - Valve", device_address, MHA_SENSOR_TYPE_VALVE))
                 devices.append(
                     MaxHomeAutomationSensor (handler, device_name + " - Offset", device_address, MHA_SENSOR_TYPE_OFFSET))
+                                
+            if device[MHA_API_TYPE] == MHA_API_ECO_BUTTON:
+                device_address = device[MHA_API_ADDRESS]
+                device_name = device[MHA_API_NAME]
+                devices.append(
+                    MaxHomeAutomationSensor (handler, device_name + " - Mode", device_address, MHA_SENSOR_TYPE_ECO_BUTTON))
                                 
     add_entities(devices)
 
@@ -108,5 +119,11 @@ class MaxHomeAutomationSensor(Entity):
         self._cubehandle.update()
         # find the device
         device = self._cubehandle.device_by_address(self._device_address)
+        value = device[self._sensor_type]
         # update internal values
-        self._state = device[self._sensor_type]
+        self._state = (
+            device[self._sensor_type] 
+                if self._sensor_type != MHA_SENSOR_TYPE_ECO_BUTTON 
+            else 
+                MAP_MHA_OPERATION_MODE_HASS[device[self._sensor_type]]
+            )

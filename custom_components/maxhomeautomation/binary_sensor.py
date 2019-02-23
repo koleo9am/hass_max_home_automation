@@ -6,7 +6,9 @@ from .__init__ import (
     DATA_KEY, MHA_API_DEVICES, MHA_API_ADDRESS, MHA_API_NAME, 
     MHA_API_RADIATOR_THERMOSTAT, MHA_API_TYPE, 
     MHA_API_ERROR, MHA_API_INITIALIZED, MHA_API_BATTERY,
-    MHA_API_PANEL_LOCKED, MHA_API_LINK_ERROR,
+    MHA_API_PANEL_LOCKED, MHA_API_LINK_ERROR, 
+    MHA_API_OPEN,
+    MHA_API_SHUTTER_CONTACT, MHA_API_ECO_BUTTON
     )
 
 _LOGGER = logging.getLogger(__name__)
@@ -16,6 +18,7 @@ MHA_SENSOR_TYPE_INITIALIZED = MHA_API_INITIALIZED
 MHA_SENSOR_TYPE_BATTERY = MHA_API_BATTERY
 MHA_SENSOR_TYPE_PANEL_LOCKED = MHA_API_PANEL_LOCKED
 MHA_SENSOR_TYPE_LINK_ERROR = MHA_API_LINK_ERROR
+MHA_SENSOR_TYPE_SHUTTER_CONTACT = MHA_API_OPEN
 
 # allowed sensors types
 MHA_ALLOWED_SENSOR_TYPES = [
@@ -24,6 +27,7 @@ MHA_ALLOWED_SENSOR_TYPES = [
     MHA_SENSOR_TYPE_BATTERY,
     MHA_SENSOR_TYPE_PANEL_LOCKED, 
     MHA_SENSOR_TYPE_LINK_ERROR,
+    MHA_SENSOR_TYPE_SHUTTER_CONTACT,
     ]
 
 MHA_DEVICE_CLASSES_CAST = {
@@ -32,6 +36,7 @@ MHA_DEVICE_CLASSES_CAST = {
     MHA_SENSOR_TYPE_BATTERY: 'battery',
     MHA_SENSOR_TYPE_PANEL_LOCKED: 'lock',
     MHA_SENSOR_TYPE_LINK_ERROR: 'connectivity',
+    MHA_SENSOR_TYPE_SHUTTER_CONTACT: 'window'
 }
 
 MHA_VALUE_CAST = {
@@ -40,6 +45,7 @@ MHA_VALUE_CAST = {
     MHA_SENSOR_TYPE_BATTERY: {True: True, False: False, },
     MHA_SENSOR_TYPE_PANEL_LOCKED: {True: False, False: True, },
     MHA_SENSOR_TYPE_LINK_ERROR: {True: False, False: True, },
+    MHA_SENSOR_TYPE_SHUTTER_CONTACT: {True: True, False: False, },
 }
 
 
@@ -57,18 +63,47 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
             if device[MHA_API_TYPE] == MHA_API_RADIATOR_THERMOSTAT:
                 device_address = device[MHA_API_ADDRESS]
                 device_name = device[MHA_API_NAME]
-                
                 devices.append(
                     MaxHomeAutomationBinarySensor (handler, device_name + " - Error", device_address, MHA_SENSOR_TYPE_ERROR))
                 devices.append(
                     MaxHomeAutomationBinarySensor (handler, device_name + " - Initialized", device_address, MHA_SENSOR_TYPE_INITIALIZED))
                 devices.append(
-                    MaxHomeAutomationBinarySensor (handler, device_name + " - Battery", device_address, MHA_SENSOR_TYPE_BATTERY))
+                    MaxHomeAutomationBinarySensor (handler, device_name + " - Low battery", device_address, MHA_SENSOR_TYPE_BATTERY))
                 devices.append(
-                    MaxHomeAutomationBinarySensor (handler, device_name + " - Locked", device_address, MHA_SENSOR_TYPE_PANEL_LOCKED))
+                    MaxHomeAutomationBinarySensor (handler, device_name + " - Unlocked", device_address, MHA_SENSOR_TYPE_PANEL_LOCKED))
                 devices.append(
                     MaxHomeAutomationBinarySensor (handler, device_name + " - Link", device_address, MHA_SENSOR_TYPE_LINK_ERROR))
+
+            # we have shutter contact
+            if device[MHA_API_TYPE] == MHA_API_SHUTTER_CONTACT:
+                device_address = device[MHA_API_ADDRESS]
+                device_name = device[MHA_API_NAME]
+                devices.append(
+                    MaxHomeAutomationBinarySensor (handler, device_name + " - Error", device_address, MHA_SENSOR_TYPE_ERROR))
+                devices.append(
+                    MaxHomeAutomationBinarySensor (handler, device_name + " - Initialized", device_address, MHA_SENSOR_TYPE_INITIALIZED))
+                devices.append(
+                    MaxHomeAutomationBinarySensor (handler, device_name + " - Low battery", device_address, MHA_SENSOR_TYPE_BATTERY))
+                devices.append(
+                    MaxHomeAutomationBinarySensor (handler, device_name + " - Link", device_address, MHA_SENSOR_TYPE_LINK_ERROR))
+                devices.append(
+                    MaxHomeAutomationBinarySensor (handler, device_name + " - Open window", device_address, MHA_SENSOR_TYPE_SHUTTER_CONTACT))
                                 
+            # we have eco button
+            if device[MHA_API_TYPE] == MHA_API_ECO_BUTTON:
+                device_address = device[MHA_API_ADDRESS]
+                device_name = device[MHA_API_NAME]
+                devices.append(
+                    MaxHomeAutomationBinarySensor (handler, device_name + " - Error", device_address, MHA_SENSOR_TYPE_ERROR))
+                devices.append(
+                    MaxHomeAutomationBinarySensor (handler, device_name + " - Initialized", device_address, MHA_SENSOR_TYPE_INITIALIZED))
+                devices.append(
+                    MaxHomeAutomationBinarySensor (handler, device_name + " - Low battery", device_address, MHA_SENSOR_TYPE_BATTERY))
+                devices.append(
+                    MaxHomeAutomationBinarySensor (handler, device_name + " - Unlocked", device_address, MHA_SENSOR_TYPE_PANEL_LOCKED))
+                devices.append(
+                    MaxHomeAutomationBinarySensor (handler, device_name + " - Link", device_address, MHA_SENSOR_TYPE_LINK_ERROR))
+
     add_entities(devices)
 
 

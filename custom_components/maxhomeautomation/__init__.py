@@ -20,6 +20,9 @@ import requests
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.discovery import load_platform
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_SCAN_INTERVAL
+from homeassistant.components.climate import (
+    STATE_AUTO, STATE_MANUAL, STATE_ECO, STATE_HEAT
+    )
 import json
 
 _LOGGER = logging.getLogger(__name__)
@@ -38,7 +41,6 @@ DEFAULT_SCAN_INTERVAL = 60
 #API_CONSTS
 MHA_API_DEVICES = 'devices'
 MHA_API_ADDRESS = 'address'
-MHA_API_RADIATOR_THERMOSTAT = 'radiator thermostat'
 MHA_API_NAME = 'name'
 MHA_API_TYPE = 'type'
 MHA_API_TEMPERATURE = 'temperature'
@@ -51,6 +53,23 @@ MHA_API_INITIALIZED = 'initialized'
 MHA_API_BATTERY = 'battery_low'
 MHA_API_PANEL_LOCKED = 'panel_locked'
 MHA_API_LINK_ERROR = 'link_error'
+MHA_API_OPEN = 'open'
+
+MHA_API_RADIATOR_THERMOSTAT = 'radiator thermostat'
+MHA_API_SHUTTER_CONTACT = 'shutter contact'
+MHA_API_ECO_BUTTON = 'eco button'
+
+MHA_STATE_AUTOMATIC = 'automatic'
+MHA_STATE_MANUAL = 'manual'
+MHA_STATE_BOOST = 'boost'
+MHA_STATE_VACATION = 'vacation'
+
+MAP_MHA_OPERATION_MODE_HASS = {
+    MHA_STATE_AUTOMATIC: STATE_AUTO,
+    MHA_STATE_MANUAL: STATE_MANUAL,
+    MHA_STATE_BOOST: STATE_HEAT,
+    MHA_STATE_VACATION: STATE_ECO,
+    }
 
 #SCHEMA
 CONF_GATEWAYS = 'gateways'

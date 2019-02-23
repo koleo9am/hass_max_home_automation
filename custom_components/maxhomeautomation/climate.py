@@ -13,26 +13,15 @@ from homeassistant.const import TEMP_CELSIUS, ATTR_TEMPERATURE
 from .__init__ import (
     DATA_KEY, MHA_API_DEVICES, MHA_API_ADDRESS, MHA_API_NAME, 
     MHA_API_RADIATOR_THERMOSTAT, MHA_API_TYPE, MHA_API_TEMPERATURE,
-    MHA_API_MODE, MHA_API_SET_TEMPERATURE
+    MHA_API_MODE, MHA_API_SET_TEMPERATURE, MAP_MHA_OPERATION_MODE_HASS
     )
 from .__init__ import MaxHomeAutomationHandler
-
 
 _LOGGER = logging.getLogger(__name__)
 
 SUPPORT_FLAGS = SUPPORT_TARGET_TEMPERATURE | SUPPORT_OPERATION_MODE
 
-MHA_STATE_AUTOMATIC = 'automatic'
-MHA_STATE_MANUAL = 'manual'
-MHA_STATE_BOOST = 'boost'
-MHA_STATE_VACATION = 'vacation'
 
-MAP_MHA_OPERATION_MODE_HASS = {
-    MHA_STATE_AUTOMATIC: STATE_AUTO,
-    MHA_STATE_MANUAL: STATE_MANUAL,
-    MHA_STATE_BOOST: STATE_HEAT,
-    MHA_STATE_VACATION: STATE_ECO,
-    }
 
 def setup_platform(hass, config, add_entities, discovery_info=None):
     """Iterate through all MAX! Devices and add thermostats."""
