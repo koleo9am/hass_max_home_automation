@@ -26,22 +26,25 @@ How to install MAX! Home Automation on Raspberry PI: https://sourceforge.net/p/m
 
 ## Feature list
 * Climate Component
-  * all Operational modes: AUTO, MANUAL, BOOST, VACATION
-  * Vacation via ECO mode - fixed vacation length 365 days 
-* Sensors (yet only for thermostatic valves)
-  * current temperature
-  * target temperature
-  * valve
-  * offset
-* Binary Sensors (yet only for thermostatic valves)
-  * Link Error
-  * Error
-  * Low Battery
-  * Panel Locked
-  * Initialized
+  * Supported operational modes
+    * Auto
+    * Manual
+    * Heat (via Eq-3 BOOST)
+    * Eco (via Eq-3 VACATION)
+  * Note: vacation via Eco operation mode has fixed initial interval 365 days 
+* Sensors
+  * Current temperature (Eq-3 MAX!, Eq-3 MAX!+)
+  * Target temperature (Eq-3 MAX!, Eq-3 MAX!+)
+  * Valve (Eq-3 MAX!, Eq-3 MAX!+)
+  * Offset (Eq-3 MAX!, Eq-3 MAX!+)
+  * Mode (Eco button)
+* Binary Sensors
+  * Link error (Eq-3 MAX!, Eq-3 MAX!+, Eco button, Window Sutter)
+  * Error (Eq-3 MAX!, Eq-3 MAX!+, Eco button, Window Sutter)
+  * Low battery (Eq-3 MAX!, Eq-3 MAX!+, Eco button, Window Sutter)
+  * Panel unlocked (Eq-3 MAX!, Eq-3 MAX!+, Eco button)
+  * Initialized (Eq-3 MAX!, Eq-3 MAX!+, Eco button, Window Sutter)
+  * Open window (Window Sutter)
 
 ## Planned Features
-* Support for Window Sensor
-* Support for Eco button
 * Support for Wall Thermostat (I have no hardware one to test)
-
