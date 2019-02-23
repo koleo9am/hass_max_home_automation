@@ -31,7 +31,7 @@ How to install MAX! Home Automation on Raspberry PI: https://sourceforge.net/p/m
     * Manual
     * Heat (via Eq-3 BOOST)
     * Eco (via Eq-3 VACATION)
-  * Note: vacation via Eco operation mode has fixed initial interval 365 days 
+  * Note: Eco operation mode via Eq-3 VACATION mode has fixed initial interval 365 days 
 * Sensors
   * Current temperature (Eq-3 MAX!, Eq-3 MAX!+)
   * Target temperature (Eq-3 MAX!, Eq-3 MAX!+)
