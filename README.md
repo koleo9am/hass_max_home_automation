@@ -38,6 +38,7 @@ How to install MAX! Home Automation on Raspberry PI: https://sourceforge.net/p/m
   * Valve (Eq-3 MAX!, Eq-3 MAX!+)
   * Offset (Eq-3 MAX!, Eq-3 MAX!+)
   * Mode (Eco button)
+  * Cube RF Dyty (MAX! Cube)
 * Binary Sensors
   * Link error (Eq-3 MAX!, Eq-3 MAX!+, Eco button, Window Sutter)
   * Error (Eq-3 MAX!, Eq-3 MAX!+, Eco button, Window Sutter)
@@ -47,4 +48,4 @@ How to install MAX! Home Automation on Raspberry PI: https://sourceforge.net/p/m
   * Open window (Window Sutter)
 
 ## Planned Features
-* Support for Wall Thermostat (I have no hardware one to test)
+* Support for Wall Thermostat (I don't have one to test it)
