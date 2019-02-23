@@ -38,7 +38,7 @@ How to install MAX! Home Automation on Raspberry PI: https://sourceforge.net/p/m
   * Valve (Eq-3 MAX!, Eq-3 MAX!+)
   * Offset (Eq-3 MAX!, Eq-3 MAX!+)
   * Mode (Eco button)
-  * Cube RF Dyty (MAX! Cube)
+  * Cube RF duty cycle (MAX! Cube)
 * Binary Sensors
   * Link error (Eq-3 MAX!, Eq-3 MAX!+, Eco button, Window Sutter)
   * Error (Eq-3 MAX!, Eq-3 MAX!+, Eco button, Window Sutter)
