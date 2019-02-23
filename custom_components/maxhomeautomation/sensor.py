@@ -186,5 +186,12 @@ class MaxHomeAutomationDutySensor(Entity):
     def update(self):
         """Get latest data from MAX! Home Automation"""
         self._cubehandle.update()
+        value = self._cubehandle._cube_duty
+        # no value 
+        if value is None:
+            self._state = None
+            return False
+        # remove '%'
+        value = value.replace('%', '')
         # update internal values
-        self._state = self._cubehandle._cube_duty
+        self._state = value
