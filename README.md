@@ -1,6 +1,9 @@
 # hass_max_home_automation
 Home Assistant support for MAX! Cube via MAX! Home Automation - HTTP API
 
+## Preview
+![example screenshot](doc/screenshot.png)
+
 ## Sample configuration
 ```yaml
 # Example configuration.yaml entry
