@@ -28,7 +28,7 @@ MAX! Home Automation has enabled HTTP API only for localhost at 8080 port.
 How to install MAX! Home Automation on Raspberry PI: https://sourceforge.net/p/max-home-automation/wiki/Raspberry%20installation/
 
 ## Feature list
-* Climate Component
+* Climate Component (Eq-3 MAX!, Eq-3 MAX!+, Eq-3 Wall Thermostat)
   * Supported operational modes
     * Auto
     * Manual
@@ -36,19 +36,16 @@ How to install MAX! Home Automation on Raspberry PI: https://sourceforge.net/p/m
     * Eco (via Eq-3 VACATION)
   * Note: Eco operation mode via Eq-3 VACATION mode has fixed initial interval 365 days 
 * Sensors
-  * Current temperature (Eq-3 MAX!, Eq-3 MAX!+)
-  * Target temperature (Eq-3 MAX!, Eq-3 MAX!+)
+  * Current temperature (Eq-3 MAX!, Eq-3 MAX!+, Eq-3 Wall Thermostat)
+  * Target temperature (Eq-3 MAX!, Eq-3 MAX!+, Eq-3 Wall Thermostat)
   * Valve (Eq-3 MAX!, Eq-3 MAX!+)
   * Offset (Eq-3 MAX!, Eq-3 MAX!+)
   * Mode (Eco button)
   * Cube RF duty cycle (MAX! Cube)
 * Binary Sensors
-  * Link error (Eq-3 MAX!, Eq-3 MAX!+, Eco button, Window Sutter)
-  * Error (Eq-3 MAX!, Eq-3 MAX!+, Eco button, Window Sutter)
-  * Low battery (Eq-3 MAX!, Eq-3 MAX!+, Eco button, Window Sutter)
-  * Panel unlocked (Eq-3 MAX!, Eq-3 MAX!+, Eco button)
-  * Initialized (Eq-3 MAX!, Eq-3 MAX!+, Eco button, Window Sutter)
+  * Link error (Eq-3 MAX!, Eq-3 MAX!+, Eq-3 Wall Thermostat, Eco button, Window Sutter)
+  * Error (Eq-3 MAX!, Eq-3 MAX!+, Eq-3 Wall Thermostat, Eco button, Window Sutter)
+  * Low battery (Eq-3 MAX!, Eq-3 MAX!+, Eq-3 Wall Thermostat, Eco button, Window Sutter)
+  * Panel unlocked (Eq-3 MAX!, Eq-3 MAX!+, Eq-3 Wall Thermostat, Eco button)
+  * Initialized (Eq-3 MAX!, Eq-3 MAX!+, Eq-3 Wall Thermostat, Eco button, Window Sutter)
   * Open window (Window Sutter)
-
-## Planned Features
-* Support for Wall Thermostat (I don't have one to test it)
