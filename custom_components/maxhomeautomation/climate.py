@@ -12,7 +12,8 @@ from homeassistant.components.climate import (
 from homeassistant.const import TEMP_CELSIUS, ATTR_TEMPERATURE
 from .__init__ import (
     DATA_KEY, MHA_API_DEVICES, MHA_API_ADDRESS, MHA_API_NAME, 
-    MHA_API_RADIATOR_THERMOSTAT, MHA_API_TYPE, MHA_API_TEMPERATURE,
+    MHA_API_RADIATOR_THERMOSTAT, MHA_API_WALL_THERMOSTAT,
+    MHA_API_TYPE, MHA_API_TEMPERATURE,
     MHA_API_MODE, MHA_API_SET_TEMPERATURE, MAP_MHA_OPERATION_MODE_HASS
     )
 from .__init__ import MaxHomeAutomationHandler
@@ -34,7 +35,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         # walk through devices
         for device in handler._cube_json[MHA_API_DEVICES]:
             #we have thermostat
-            if device.get(MHA_API_TYPE, '') == MHA_API_RADIATOR_THERMOSTAT:
+            if device.get(MHA_API_TYPE, '') in [MHA_API_RADIATOR_THERMOSTAT, MHA_API_WALL_THERMOSTAT]:
                 device_address = device.get(MHA_API_ADDRESS, None)
                 device_name = device.get(MHA_API_NAME, None)
                 
