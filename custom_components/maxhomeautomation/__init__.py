@@ -56,6 +56,7 @@ MHA_API_LINK_ERROR = 'link_error'
 MHA_API_OPEN = 'open'
 
 MHA_API_RADIATOR_THERMOSTAT = 'radiator thermostat'
+MHA_API_WALL_THERMOSTAT = 'wall thermostat'
 MHA_API_SHUTTER_CONTACT = 'shutter contact'
 MHA_API_ECO_BUTTON = 'eco button'
 

@@ -4,7 +4,8 @@ from homeassistant.helpers.entity import Entity
 from homeassistant.const import TEMP_CELSIUS
 from .__init__ import (
     DATA_KEY, MHA_API_DEVICES, MHA_API_ADDRESS, MHA_API_NAME, 
-    MHA_API_RADIATOR_THERMOSTAT, MHA_API_TYPE, MHA_API_TEMPERATURE,
+    MHA_API_RADIATOR_THERMOSTAT, MHA_API_WALL_THERMOSTAT, 
+    MHA_API_TYPE, MHA_API_TEMPERATURE,
     MHA_API_SET_TEMPERATURE, MHA_API_VALVE, MHA_API_OFFSET,
     MHA_API_ECO_BUTTON, MHA_API_MODE, MAP_MHA_OPERATION_MODE_HASS
     )
@@ -77,6 +78,17 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
                     devices.append(
                         MaxHomeAutomationSensor (handler, device_name + " - Offset", device_address, MHA_SENSOR_TYPE_OFFSET))
                                 
+            #we have thermostat
+            if device.get(MHA_API_TYPE, '') == MHA_API_WALL_THERMOSTAT:
+                device_address = device.get(MHA_API_ADDRESS, None)
+                device_name = device.get(MHA_API_NAME, None)
+                if device_address is not None and device_name is not None:
+                    devices.append(
+                        MaxHomeAutomationSensor (handler, device_name + " - Temperature", device_address, MHA_SENSOR_TYPE_TEMPERATURE))
+                    devices.append(
+                        MaxHomeAutomationSensor (handler, device_name + " - Target Temperature", device_address, MHA_SENSOR_TYPE_SET_TEMPERATURE))
+
+            # we have eco button
             if device.get(MHA_API_TYPE, '') == MHA_API_ECO_BUTTON:
                 device_address = device.get(MHA_API_ADDRESS, None)
                 device_name = device.get(MHA_API_NAME, None)
