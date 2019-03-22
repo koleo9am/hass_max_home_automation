@@ -5,58 +5,80 @@ import requests
 from socket import timeout
 
 from homeassistant.components.climate import ClimateDevice
-from homeassistant.components.climate import (
+from homeassistant.components.climate.const import (
     STATE_AUTO, STATE_MANUAL, STATE_ECO, STATE_HEAT, 
     SUPPORT_TARGET_TEMPERATURE, SUPPORT_OPERATION_MODE,
     )
 from homeassistant.const import TEMP_CELSIUS, ATTR_TEMPERATURE
-from .__init__ import (
-    DATA_KEY, MHA_API_DEVICES, MHA_API_ADDRESS, MHA_API_NAME, 
-    MHA_API_RADIATOR_THERMOSTAT, MHA_API_WALL_THERMOSTAT,
-    MHA_API_TYPE, MHA_API_TEMPERATURE,
-    MHA_API_MODE, MHA_API_SET_TEMPERATURE, MAP_MHA_OPERATION_MODE_HASS
-    )
-from .__init__ import MaxHomeAutomationHandler
+from .consts import *
+from .__init__ import MaxHomeAutomationDeviceHandler
 
 _LOGGER = logging.getLogger(__name__)
 
 SUPPORT_FLAGS = SUPPORT_TARGET_TEMPERATURE | SUPPORT_OPERATION_MODE
 
-
-
 def setup_platform(hass, config, add_entities, discovery_info=None):
-    """Iterate through all MAX! Devices and add thermostats."""
-    if discovery_info is None:
-        return
+    """Iterate through all MAX! Devices."""
 
     devices = []
-    for handler in hass.data[DATA_KEY].values():
-        handler.update()
-        # walk through devices
-        for device in handler._cube_json[MHA_API_DEVICES]:
-            #we have thermostat
-            if device.get(MHA_API_TYPE, '') in [MHA_API_RADIATOR_THERMOSTAT, MHA_API_WALL_THERMOSTAT]:
-                device_address = device.get(MHA_API_ADDRESS, None)
-                device_name = device.get(MHA_API_NAME, None)
+    
+    # read configuration and setup platform
+    gateways = hass.data[DATA_KEY][DOMAIN][CONF_GATEWAYS]
+    for gateway in gateways:
+        host = gateway[CONF_HOST]
+        port = gateway[CONF_PORT]
+        scan_interval = gateway[CONF_SCAN_INTERVAL].total_seconds()
+        cubes = gateway[CONF_CUBES]
+        gateway_url_base= "http://{}:{}/".format(host, port)
+
+        # walk trough cubes
+        for cube in cubes:
+            # read config
+            cube_address = cube[CONF_HEX_ADDRESS]
+            cube_name = cube[CONF_NAME]
+            radiator_thermostats = cube[CONF_RADIATOR_THERMOSTATS]
+            wall_thermostats = cube[CONF_WALL_THERMOSTATS]
+            window_shutters = cube[CONF_WINDOWS_SHUTTERS]
+            eco_buttons = cube[CONF_ECO_BUTTONS]
+        
+            # walk trough radiator thermostats
+            for radiator_thermostat in radiator_thermostats:
+                device_address = radiator_thermostat[CONF_HEX_ADDRESS]
+                device_name = radiator_thermostat[CONF_NAME]
                 
-                if device_address is None:
-                    continue
+                handler = MaxHomeAutomationDeviceHandler(
+                    gateway_url_base, cube_address, device_address, scan_interval)
                 
                 devices.append(
-                    MaxHomeAutomationClimate (handler, device_name, device_address))
+                    MaxHomeAutomationClimate (handler, device_name))
+               
+                            
+            # walk trough wall thermostats
+            for wall_thermostat in wall_thermostats:
+                device_address = wall_thermostat[CONF_HEX_ADDRESS]
+                device_name = wall_thermostat[CONF_NAME]
+                
+                handler = MaxHomeAutomationDeviceHandler(
+                    gateway_url_base, cube_address, device_address, scan_interval)
+                
+                devices.append(
+                    MaxHomeAutomationClimate (handler, device_name))
 
+    
     if devices:
         add_entities(devices)
+
+    # platform initialization was successful
+    return True
 
 class MaxHomeAutomationClimate(ClimateDevice):
     """MAX! Home Automation ClimateDevice."""
 
-    def __init__(self, cubehandler, name, device_address):
+    def __init__(self, device_handler, name):
         """Initialize MAX! Home Automation ClimateDevice."""
         self._name = name
         self._operation_list = [STATE_AUTO, STATE_MANUAL, STATE_HEAT, STATE_ECO]
-        self._device_address = device_address
-        self._cubehandle = cubehandler
+        self._device_handler = device_handler
         
     @property
     def supported_features(self):
@@ -91,7 +113,7 @@ class MaxHomeAutomationClimate(ClimateDevice):
     @property
     def current_temperature(self):
         """Return the current temperature."""
-        device = self._cubehandle.device_by_address(self._device_address)
+        device = self._device_handler.data
         # device not found
         if device is None:
             return None
@@ -101,7 +123,7 @@ class MaxHomeAutomationClimate(ClimateDevice):
     @property
     def current_operation(self):
         """Return current operation (auto, manual, boost, vacation)."""
-        device = self._cubehandle.device_by_address(self._device_address)
+        device = self._device_handler.data
         # device not found
         if device is None:
             return None
@@ -116,7 +138,7 @@ class MaxHomeAutomationClimate(ClimateDevice):
     @property
     def target_temperature(self):
         """Return the temperature we try to reach."""
-        device = self._cubehandle.device_by_address(self._device_address)
+        device = self._device_handler.data
         # device not found
         if device is None:
             return None
@@ -137,23 +159,23 @@ class MaxHomeAutomationClimate(ClimateDevice):
 
     def update(self):
         """Get latest data from MAX! Home Automation"""
-        self._cubehandle.update()
+        self._device_handler.update()
     
     def set_max_home_automation_thermostat (self, hass_operation_mode, temperature):
         import urllib.request
         
-        command_url = self._cubehandle._gateway_base_url + {
+        command_url = self._device_handler._gateway_base_url + {
             STATE_AUTO: "set-automatic?cube={}&device={}{}".format(
-                self._cubehandle._cube_hex_address, MaxHomeAutomationHandler.encode_device_address(self._device_address), 
+                self._device_handler._cube_hex_address, self._device_handler._device_hex_address, 
                 "&temperature={}".format if temperature else ""),
             STATE_MANUAL: "set-manual?cube={}&device={}{}".format(
-                self._cubehandle._cube_hex_address, MaxHomeAutomationHandler.encode_device_address(self._device_address), 
+                self._device_handler._cube_hex_address, self._device_handler._device_hex_address, 
                 "&temperature+=0.0" if temperature is None else "&temperature={}".format(temperature)),
             STATE_HEAT: "set-boost?cube={}&device={}".format(
-                self._cubehandle._cube_hex_address, MaxHomeAutomationHandler.encode_device_address(self._device_address)),
+                self._device_handler._cube_hex_address, self._device_handler._device_hex_address),
             # TODO vacation length as platform parameter or input
             STATE_ECO: "set-vacation?cube={}&device={}&eco&days=365".format(
-                self._cubehandle._cube_hex_address, MaxHomeAutomationHandler.encode_device_address(self._device_address)),
+                self._device_handler._cube_hex_address, self._device_handler._device_hex_address),
             }[hass_operation_mode]
         
         if command_url is None:
