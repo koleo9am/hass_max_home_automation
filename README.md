@@ -9,9 +9,24 @@ Home Assistant support for MAX! Cube via MAX! Home Automation - HTTP API
 # Example configuration.yaml entry
 maxhomeautomation:
   gateways:
-    - host: localhost
-      port: 8080
-      scan_interval: 10
+    host: localhost
+    port: 8080
+    scan_interval: 10
+    cubes:
+      - cube_hex_address: 
+        name: 
+        radiator_thermostats:
+          - hex_address:
+            name: 
+        wall_thermostats:
+          - hex_address:
+            name: 
+        window_shutters:
+          - hex_address:
+            name: 
+        eco_buttons:
+          - hex_address:
+            name:       
 ```
 ## Conditions
 Feel free to use. Feel free to make Pull requests with enhanced features or correction of bugs.
