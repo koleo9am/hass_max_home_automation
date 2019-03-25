@@ -28,6 +28,44 @@ maxhomeautomation:
           - hex_address:
             name:       
 ```
+Notes: if you have no devices of some type, ie. wall_thermostat, leave the list empty. Omitting the list cause configuration error as described in [issue #3](https://github.com/koleo9am/hass_max_home_automation/issues/3).
+
+## UI configuration example (one half of the screenshot)
+```yaml
+type: vertical-stack
+  - entity: climate.obytna_kuchyne
+    type: thermostat
+  - columns: 7
+    entities:
+      - entity: binary_sensor.obytna_kuchyne_initialized
+      - entity: binary_sensor.obytna_kuchyne_link
+      - entity: binary_sensor.obytna_kuchyne_unlocked
+      - entity: binary_sensor.obytna_kuchyne_low_battery
+      - entity: binary_sensor.obytna_kuchyne_error
+      - entity: sensor.obytna_kuchyne_valve
+      - entity: sensor.obytna_kuchyne_offset
+    show_name: false
+    show_state: true
+    title: Obytná kuchyně
+    type: glance
+  - columns: 5
+    entities:
+      - entity: binary_sensor.okenni_senzor_obytna_kuchyne_initialized
+      - entity: binary_sensor.okenni_senzor_obytna_kuchyne_link
+      - entity: binary_sensor.okenni_senzor_obytna_kuchyne_low_battery
+      - entity: binary_sensor.okenni_senzor_obytna_kuchyne_error
+      - entity: binary_sensor.okenni_senzor_obytna_kuchyne_open_window
+    show_name: false
+    show_state: true
+    title: Obytná kuchyně - okno
+    type: glance
+
+```
+Notes:
+* Thermostat name is "Obytna kuchyne". 
+* Window sensor name is "Okenni senzor obytna kuchyne".
+* Use apropriate indent.
+
 ## Conditions
 Feel free to use. Feel free to make Pull requests with enhanced features or correction of bugs.
 Please note I have started with Home Assistant and MAX! Cube system on 02/15/2019. 
