@@ -13,7 +13,7 @@ maxhomeautomation:
     port: 8080
     scan_interval: 10
     cubes:
-      - cube_hex_address: 
+      - hex_address: 
         name: 
         radiator_thermostats:
           - hex_address:
