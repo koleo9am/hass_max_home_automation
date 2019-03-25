@@ -53,13 +53,13 @@ CONFIG_DEVICE = vol.Schema({
 CONFIG_CUBE = vol.Schema({
     vol.Required(CONF_HEX_ADDRESS): cv.string,
     vol.Required(CONF_NAME): cv.string,
-    vol.Optional(CONF_RADIATOR_THERMOSTATS, default={}):
+    vol.Optional(CONF_RADIATOR_THERMOSTATS, default=[]):
             vol.All(cv.ensure_list, [CONFIG_DEVICE]),
-    vol.Optional(CONF_WALL_THERMOSTATS, default={}):
+    vol.Optional(CONF_WALL_THERMOSTATS, default=[]):
             vol.All(cv.ensure_list, [CONFIG_DEVICE]),
-    vol.Optional(CONF_WINDOWS_SHUTTERS, default={}):
+    vol.Optional(CONF_WINDOWS_SHUTTERS, default=[]):
             vol.All(cv.ensure_list, [CONFIG_DEVICE]),
-    vol.Optional(CONF_ECO_BUTTONS, default={}):
+    vol.Optional(CONF_ECO_BUTTONS, default=[]):
             vol.All(cv.ensure_list, [CONFIG_DEVICE]),
 })
 
