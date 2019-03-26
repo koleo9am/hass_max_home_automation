@@ -167,7 +167,7 @@ class MaxHomeAutomationClimate(ClimateDevice):
         command_url = self._device_handler._gateway_base_url + {
             STATE_AUTO: "set-automatic?cube={}&device={}{}".format(
                 self._device_handler._cube_hex_address, self._device_handler._device_hex_address, 
-                "&temperature={}".format if temperature else ""),
+                "" if temperature is None else "&temperature={}".format(temperature)),
             STATE_MANUAL: "set-manual?cube={}&device={}{}".format(
                 self._device_handler._cube_hex_address, self._device_handler._device_hex_address, 
                 "&temperature+=0.0" if temperature is None else "&temperature={}".format(temperature)),
