@@ -3,6 +3,9 @@ from homeassistant.components.climate.const import (
     )
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_SCAN_INTERVAL
 
+# version for pyupdate
+VERSION='0.0.2'
+
 # PLATFORM CONSTS
 DOMAIN = 'maxhomeautomation'
 DATA_KEY = 'maxhomeautomation'

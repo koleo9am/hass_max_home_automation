@@ -5,6 +5,8 @@ from homeassistant.components.binary_sensor import BinarySensorDevice
 from .consts import *
 from .__init__ import MaxHomeAutomationDeviceHandler
 
+from .consts import VERSION
+
 _LOGGER = logging.getLogger(__name__)
 
 # allowed sensors types

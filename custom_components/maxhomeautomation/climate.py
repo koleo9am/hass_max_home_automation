@@ -13,6 +13,8 @@ from homeassistant.const import TEMP_CELSIUS, ATTR_TEMPERATURE
 from .consts import *
 from .__init__ import MaxHomeAutomationDeviceHandler
 
+from .consts import VERSION
+
 _LOGGER = logging.getLogger(__name__)
 
 SUPPORT_FLAGS = SUPPORT_TARGET_TEMPERATURE | SUPPORT_OPERATION_MODE
