@@ -2,15 +2,15 @@
     "maxhomeautomation": {
         "version": "0.0.2",
         "local_location": "/custom_components/maxhomeautomation/__init__.py",
-        "remote_location": "https://github.com/koleo9am/hass_max_home_automation/master/custom_components/maxhomeautomation/__init__.py",
+        "remote_location": "https://raw.githubusercontent.com/koleo9am/hass_max_home_automation/master/custom_components/maxhomeautomation/__init__.py",
         "visit_repo": "https://github.com/koleo9am/hass_max_home_automation",
         "changelog": "https://github.com/koleo9am/hass_max_home_automation/releases/latest",
         "resources": [
-            "https://github.com/koleo9am/hass_max_home_automation/master/custom_components/maxhomeautomation/binary_sensor.py",
-            "https://github.com/koleo9am/hass_max_home_automation/master/custom_components/maxhomeautomation/climate.py",
-            "https://github.com/koleo9am/hass_max_home_automation/master/custom_components/maxhomeautomation/consts.py",
-            "https://github.com/koleo9am/hass_max_home_automation/master/custom_components/maxhomeautomation/const.py",
-            "https://github.com/koleo9am/hass_max_home_automation/master/custom_components/maxhomeautomation/sensor.py"
+            "https://raw.githubusercontent.com/koleo9am/hass_max_home_automation/master/custom_components/maxhomeautomation/binary_sensor.py",
+            "https://raw.githubusercontent.com/koleo9am/hass_max_home_automation/master/custom_components/maxhomeautomation/climate.py",
+            "https://raw.githubusercontent.com/koleo9am/hass_max_home_automation/master/custom_components/maxhomeautomation/consts.py",
+            "https://raw.githubusercontent.com/koleo9am/hass_max_home_automation/master/custom_components/maxhomeautomation/const.py",
+            "https://raw.githubusercontent.com/koleo9am/hass_max_home_automation/master/custom_components/maxhomeautomation/sensor.py"
         ]
     }
 }
