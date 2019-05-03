@@ -28,7 +28,25 @@ maxhomeautomation:
           - hex_address:
             name:       
 ```
-Notes: if you have no devices of some type, ie. wall_thermostat, leave the list empty. Omitting the list cause configuration error as described in [issue #3](https://github.com/koleo9am/hass_max_home_automation/issues/3).
+Notes: if you have no devices of some type, ie. wall_thermostat, leave the list empty. Omitting the list cause configuration error as described in [issue #3](https://github.com/koleo9am/hass_max_home_automation/issues/3) and [issue #6](https://github.com/koleo9am/hass_max_home_automation/issues/6).
+Example:
+```yaml
+
+maxhomeautomation:
+  gateways:
+    host: localhost
+    port: 8080
+    scan_interval: 10
+    cubes:
+      - hex_address: FFFFFF
+        name: My CUBE
+        radiator_thermostats:
+          - hex_address: FFFFFF
+            name: Some radiator
+        wall_thermostats:
+        window_shutters:
+        eco_buttons:
+```       
 
 ## UI configuration example (one half of the screenshot)
 ```yaml
