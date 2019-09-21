@@ -140,7 +140,7 @@ class MaxHomeAutomationClimate(ClimateDevice):
             return False
 
         target_temperature = kwargs.get(ATTR_TEMPERATURE)
-        return self.set_max_home_automation_thermostat (self.current_operation, target_temperature)
+        return self.set_max_home_automation_thermostat (self.hvac_mode, target_temperature)
     
     @property
     def hvac_mode(self) -> str:
