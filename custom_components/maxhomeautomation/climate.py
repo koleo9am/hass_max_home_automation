@@ -1,13 +1,14 @@
 """Support for MAX! Home Automation Thermostats via HTTP API."""
 import logging
+from typing import Any, Dict, List, Optional
 
 import requests
 from socket import timeout
 
 from homeassistant.components.climate import ClimateDevice
-from homeassistant.components.climate import (
-    STATE_AUTO, STATE_MANUAL, STATE_ECO, STATE_HEAT, 
-    SUPPORT_TARGET_TEMPERATURE, SUPPORT_OPERATION_MODE,
+from homeassistant.components.climate.const import (
+    HVAC_MODE_AUTO, HVAC_MODE_HEAT_COOL, HVAC_MODE_HEAT, HVAC_MODE_OFF,
+    SUPPORT_TARGET_TEMPERATURE
     )
 from homeassistant.const import TEMP_CELSIUS, ATTR_TEMPERATURE
 from .consts import *
@@ -17,7 +18,7 @@ from .consts import VERSION
 
 _LOGGER = logging.getLogger(__name__)
 
-SUPPORT_FLAGS = SUPPORT_TARGET_TEMPERATURE | SUPPORT_OPERATION_MODE
+SUPPORT_FLAGS = SUPPORT_TARGET_TEMPERATURE
 
 def setup_platform(hass, config, add_entities, discovery_info=None):
     """Iterate through all MAX! Devices."""
@@ -73,13 +74,14 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     # platform initialization was successful
     return True
 
+
 class MaxHomeAutomationClimate(ClimateDevice):
     """MAX! Home Automation ClimateDevice."""
 
     def __init__(self, device_handler, name):
         """Initialize MAX! Home Automation ClimateDevice."""
         self._name = name
-        self._operation_list = [STATE_AUTO, STATE_MANUAL, STATE_HEAT, STATE_ECO]
+        self._hvac_list = [HVAC_MODE_AUTO, HVAC_MODE_HEAT_COOL, HVAC_MODE_HEAT, HVAC_MODE_OFF]
         self._device_handler = device_handler
         
     @property
@@ -123,21 +125,6 @@ class MaxHomeAutomationClimate(ClimateDevice):
         return device.get(MHA_API_TEMPERATURE, None)
 
     @property
-    def current_operation(self):
-        """Return current operation (auto, manual, boost, vacation)."""
-        device = self._device_handler.data
-        # device not found
-        if device is None:
-            return None
-        # return the converted value
-        return MAP_MHA_OPERATION_MODE_HASS.get(device.get(MHA_API_MODE, None), None)
-
-    @property
-    def operation_list(self):
-        """Return the list of available operation modes."""
-        return self._operation_list
-
-    @property
     def target_temperature(self):
         """Return the temperature we try to reach."""
         device = self._device_handler.data
@@ -154,11 +141,31 @@ class MaxHomeAutomationClimate(ClimateDevice):
 
         target_temperature = kwargs.get(ATTR_TEMPERATURE)
         return self.set_max_home_automation_thermostat (self.current_operation, target_temperature)
+    
+    @property
+    def hvac_mode(self) -> str:
+        """Return hvac operation ie. heat, cool mode.
+        Need to be one of HVAC_MODE_*.
+        """
+        device = self._device_handler.data
+        # device not found
+        if device is None:
+            return None
+        # return the converted value
+        return MAP_MHA_HVAC_MODE_HASS.get(device.get(MHA_API_MODE, None), None)
 
-    def set_operation_mode(self, operation_mode):
-        """Set new operation mode."""
-        return self.set_max_home_automation_thermostat (operation_mode, None)        
-
+    
+    def set_hvac_mode(self, hvac_mode: str) -> None:
+        """Set new target hvac mode."""
+        return self.set_max_home_automation_thermostat (hvac_mode, None)
+    
+    @property
+    def hvac_modes(self) -> List[str]:
+        """Return the list of available hvac operation modes.
+        Need to be a subset of HVAC_MODES.
+        """
+        return self._hvac_list
+    
     def update(self):
         """Get latest data from MAX! Home Automation"""
         self._device_handler.update()
@@ -167,16 +174,16 @@ class MaxHomeAutomationClimate(ClimateDevice):
         import urllib.request
         
         command_url = self._device_handler._gateway_base_url + {
-            STATE_AUTO: "set-automatic?cube={}&device={}{}".format(
+            HVAC_MODE_AUTO: "set-automatic?cube={}&device={}{}".format(
                 self._device_handler._cube_hex_address, self._device_handler._device_hex_address, 
                 "" if temperature is None else "&temperature={}".format(temperature)),
-            STATE_MANUAL: "set-manual?cube={}&device={}{}".format(
+            HVAC_MODE_HEAT_COOL: "set-manual?cube={}&device={}{}".format(
                 self._device_handler._cube_hex_address, self._device_handler._device_hex_address, 
                 "&temperature+=0.0" if temperature is None else "&temperature={}".format(temperature)),
-            STATE_HEAT: "set-boost?cube={}&device={}".format(
+            HVAC_MODE_HEAT: "set-boost?cube={}&device={}".format(
                 self._device_handler._cube_hex_address, self._device_handler._device_hex_address),
             # TODO vacation length as platform parameter or input
-            STATE_ECO: "set-vacation?cube={}&device={}&eco&days=365".format(
+            HVAC_MODE_OFF: "set-vacation?cube={}&device={}&eco&days=365".format(
                 self._device_handler._cube_hex_address, self._device_handler._device_hex_address),
             }[hass_operation_mode]
         
