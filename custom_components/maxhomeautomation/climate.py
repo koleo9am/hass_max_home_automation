@@ -5,7 +5,7 @@ import requests
 from socket import timeout
 
 from homeassistant.components.climate import ClimateDevice
-from homeassistant.components.climate.const import (
+from homeassistant.components.climate import (
     STATE_AUTO, STATE_MANUAL, STATE_ECO, STATE_HEAT, 
     SUPPORT_TARGET_TEMPERATURE, SUPPORT_OPERATION_MODE,
     )

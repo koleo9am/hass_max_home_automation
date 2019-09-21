@@ -1,4 +1,4 @@
-from homeassistant.components.climate.const import (
+from homeassistant.components.climate import (
     STATE_AUTO, STATE_MANUAL, STATE_ECO, STATE_HEAT
     )
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_SCAN_INTERVAL
