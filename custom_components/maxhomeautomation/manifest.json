@@ -1,0 +1,8 @@
+{
+  "domain": "max_home_automation",
+  "name": "MAX! cube home automation",
+  "documentation": "https://github.com/koleo9am/hass_max_home_automation/blob/master/README.md",
+  "dependencies": [],
+  "codeowners": [],
+  "requirements": []
+}
