@@ -4,7 +4,7 @@ from homeassistant.components.climate.const import (
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_SCAN_INTERVAL
 
 # version for pyupdate
-VERSION='0.0.5'
+VERSION='0.0.6'
 
 # PLATFORM CONSTS
 DOMAIN = 'maxhomeautomation'
@@ -53,6 +53,12 @@ MAP_MHA_HVAC_MODE_HASS = {
     MHA_STATE_BOOST: HVAC_MODE_HEAT,
     MHA_STATE_VACATION: HVAC_MODE_OFF,
     }
+MAP_MHA_OPERATION_MODE_HASS = {
+    MHA_STATE_AUTOMATIC: HVAC_MODE_AUTO,
+    MHA_STATE_MANUAL: HVAC_MODE_HEAT_COOL,
+    MHA_STATE_BOOST: HVAC_MODE_HEAT,
+    MHA_STATE_VACATION: HVAC_MODE_OFF,
+}
 
 # sensor type constants
 MHA_SENSOR_TYPE_TEMPERATURE = MHA_API_TEMPERATURE

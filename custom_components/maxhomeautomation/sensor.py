@@ -6,8 +6,6 @@ from .consts import *
 from .__init__ import MaxHomeAutomationDeviceHandler
 from .__init__ import MaxHomeAutomationCubeHandler
 
-from .consts import VERSION
-
 _LOGGER = logging.getLogger(__name__)
 
 # allowed sensors types
