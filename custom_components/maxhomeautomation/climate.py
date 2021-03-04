@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 import requests
 from socket import timeout
 
-from homeassistant.components.climate import ClimateDevice
+from homeassistant.components.climate import ClimateEntity
 from homeassistant.components.climate.const import (
     HVAC_MODE_AUTO, HVAC_MODE_HEAT_COOL, HVAC_MODE_HEAT, HVAC_MODE_OFF,
     SUPPORT_TARGET_TEMPERATURE
@@ -75,7 +75,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     return True
 
 
-class MaxHomeAutomationClimate(ClimateDevice):
+class MaxHomeAutomationClimate(ClimateEntity):
     """MAX! Home Automation ClimateDevice."""
 
     def __init__(self, device_handler, name):
