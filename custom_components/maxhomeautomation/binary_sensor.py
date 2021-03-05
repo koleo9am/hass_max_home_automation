@@ -1,7 +1,7 @@
 """Support for MAX! Devices and add binary sensors from thermostats."""
 import logging
 
-from homeassistant.components.binary_sensor import BinarySensorDevice
+from homeassistant.components.binary_sensor import BinarySensorEntity
 from .consts import *
 from .__init__ import MaxHomeAutomationDeviceHandler
 
@@ -145,7 +145,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     # platform initialization was successful
     return True
 
-class MaxHomeAutomationBinarySensor(BinarySensorDevice):
+class MaxHomeAutomationBinarySensor(BinarySensorEntity):
     """Representation of a MAX! Cube Binary Sensor device."""
 
     def __init__(self, device_handler, name, sensor_type):
