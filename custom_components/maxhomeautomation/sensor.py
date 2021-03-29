@@ -10,9 +10,9 @@ _LOGGER = logging.getLogger(__name__)
 
 # allowed sensors types
 MHA_ALLOWED_SENSOR_TYPES = [
-    MHA_SENSOR_TYPE_TEMPERATURE, 
-    MHA_SENSOR_TYPE_SET_TEMPERATURE, 
-    MHA_SENSOR_TYPE_VALVE, 
+    MHA_SENSOR_TYPE_TEMPERATURE,
+    MHA_SENSOR_TYPE_SET_TEMPERATURE,
+    MHA_SENSOR_TYPE_VALVE,
     MHA_SENSOR_TYPE_OFFSET,
     MHA_SENSOR_TYPE_ECO_BUTTON,
     ]
@@ -41,7 +41,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     """Iterate through all MAX! Devices."""
 
     devices = []
-    
+
     # read configuration and setup platform
     gateways = hass.data[DATA_KEY][DOMAIN][CONF_GATEWAYS]
     for gateway in gateways:
@@ -60,15 +60,15 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
             wall_thermostats = cube[CONF_WALL_THERMOSTATS]
             window_shutters = cube[CONF_WINDOWS_SHUTTERS]
             eco_buttons = cube[CONF_ECO_BUTTONS]
-        
+
             # walk trough radiator thermostats
             for radiator_thermostat in radiator_thermostats:
                 device_address = radiator_thermostat[CONF_HEX_ADDRESS]
                 device_name = radiator_thermostat[CONF_NAME]
-                
+
                 handler = MaxHomeAutomationDeviceHandler(
                     gateway_url_base, cube_address, device_address, scan_interval)
-                
+
                 devices.append(
                     MaxHomeAutomationSensor (handler, device_name + " - Temperature", MHA_SENSOR_TYPE_TEMPERATURE))
                 devices.append(
@@ -78,40 +78,42 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
                 devices.append(
                     MaxHomeAutomationSensor (handler, device_name + " - Offset", MHA_SENSOR_TYPE_OFFSET))
 
-                            
+
             # walk trough wall thermostats
             for wall_thermostat in wall_thermostats:
                 device_address = wall_thermostat[CONF_HEX_ADDRESS]
                 device_name = wall_thermostat[CONF_NAME]
-                
+
                 handler = MaxHomeAutomationDeviceHandler(
                     gateway_url_base, cube_address, device_address, scan_interval)
-                
+
                 devices.append(
                     MaxHomeAutomationSensor (handler, device_name + " - Temperature", MHA_SENSOR_TYPE_TEMPERATURE))
                 devices.append(
                     MaxHomeAutomationSensor (handler, device_name + " - Target Temperature", MHA_SENSOR_TYPE_SET_TEMPERATURE))
+                devices.append(
+                    MaxHomeAutomationSensor (handler, device_name + " - Offset", MHA_SENSOR_TYPE_OFFSET))
 
-                                         
+
             # walk trough eco buttons
             for eco_button in eco_buttons:
                 device_address = eco_button[CONF_HEX_ADDRESS]
                 device_name = eco_button[CONF_NAME]
-                
+
                 handler = MaxHomeAutomationDeviceHandler(
                     gateway_url_base, cube_address, device_address, scan_interval)
-                
+
                 devices.append(
                     MaxHomeAutomationSensor (handler, device_name + " - Mode", MHA_SENSOR_TYPE_ECO_BUTTON))
-                
-                
+
+
             # duty sensor
             handler = MaxHomeAutomationCubeHandler(
                     gateway_url_base, cube_address, scan_interval)
             devices.append(
                 MaxHomeAutomationDutySensor (handler, cube_name + " - Duty"))
-                
-    
+
+
     if devices:
         add_entities(devices)
 
@@ -120,7 +122,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
 
 class MaxHomeAutomationSensor(Entity):
     """Representation of a Max! Home Automation sensor."""
-    
+
     def __init__(self, device_handler, name, sensor_type):
         """Initialize the sensor."""
         # check sensor_type
@@ -138,12 +140,12 @@ class MaxHomeAutomationSensor(Entity):
     def should_poll(self):
         """Return the polling state."""
         return True
-    
+
     @property
     def state(self):
         """Return the state of the sensor."""
         return self._state
-    
+
     @property
     def name(self):
         """Return the name of the climate device."""
@@ -162,7 +164,7 @@ class MaxHomeAutomationSensor(Entity):
     def icon(self):
         """Return the icon to use in the frontend, if any."""
         return MHA_ICON_HA_CAST.get(self.sensor_type, None)
-    
+
     def update(self):
         """Get latest data from MAX! Home Automation"""
         self._device_handler.update()
@@ -176,15 +178,15 @@ class MaxHomeAutomationSensor(Entity):
         value = device.get(self.sensor_type, None)
         self._state = (
             value
-                if self.sensor_type != MHA_SENSOR_TYPE_ECO_BUTTON 
-            else 
+                if self.sensor_type != MHA_SENSOR_TYPE_ECO_BUTTON
+            else
                 # translate operation mode of ECO button
                 MAP_MHA_OPERATION_MODE_HASS.get(value, None)
             )
-        
+
 class MaxHomeAutomationDutySensor(Entity):
     """Representation of a Max! Home Automation Cube duty sensor."""
-    
+
     def __init__(self, cubehandle, name):
         """Initialize the sensor."""
         # store values
@@ -193,22 +195,22 @@ class MaxHomeAutomationDutySensor(Entity):
         self._state = None
         # read current value
         self.update()
-    
+
     @property
     def should_poll(self):
         """Return the polling state."""
         return True
-    
+
     @property
     def state(self):
         """Return the state of the sensor."""
         return self._state
-    
+
     @property
     def name(self):
         """Return the name of the climate device."""
         return self._name
-    
+
     @property
     def sensor_type (self):
         return MHA_SENSOR_TYPE_DUTY;
@@ -222,12 +224,12 @@ class MaxHomeAutomationDutySensor(Entity):
     def icon(self):
         """Return the icon to use in the frontend, if any."""
         return MHA_ICON_HA_CAST.get(self.sensor_type, None)
-    
+
     def update(self):
         """Get latest data from MAX! Home Automation"""
         self._cubehandle.update()
         value = self._cubehandle.cube_duty
-        # no value 
+        # no value
         if value is None:
             self._state = None
             return False
