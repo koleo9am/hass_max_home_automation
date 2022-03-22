@@ -1,6 +1,6 @@
 {
     "maxhomeautomation": {
-        "version": "0.0.4",
+        "version": "0.0.5",
         "local_location": "/custom_components/maxhomeautomation/__init__.py",
         "remote_location": "https://raw.githubusercontent.com/koleo9am/hass_max_home_automation/master/custom_components/maxhomeautomation/__init__.py",
         "visit_repo": "https://github.com/koleo9am/hass_max_home_automation",
